@@ -11,6 +11,9 @@ import Poly
 toGloss :: Vec -> Point
 toGloss (Vec x y) = (double2Float x, double2Float y)
 
+fromGloss :: Point -> Vec
+fromGloss (x, y) = Vec (float2Double x) (float2Double y)
+
 dotPicture :: Vec -> Picture
 dotPicture v = translate x y $ color red $ circle 3
   where (x, y) = toGloss v
