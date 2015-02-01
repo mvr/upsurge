@@ -133,11 +133,28 @@ reifyPoly sr = Poly $ fmap snd $ sortBy (compare `on` fst) ipoints
   where assoc = M.toList $ fmap (concatMap intervalPoints) sr
         ipoints = concatMap (\(h, ps) -> fmap (\p -> (polyOrder p, Vec h (scanlinePosition p))) ps) assoc
 
+simplifyColinear :: (Vec, Vec, Vec) -> Maybe Vec
+simplifyColinear (a, b, c) = if abs d > 0.999 then Nothing else Just b
+  where d = normalize (a - b) `dot` normalize (c - b)
+
+simplifyClose :: (Vec, Vec) -> Maybe Vec
+simplifyClose (a, b) = if a `distance` b < 0.0001 then Nothing else Just a
+
+simplifyStage :: Poly -> Poly
+simplifyStage (Poly ps) = Poly . mapMaybe simplifyClose . pairs . mapMaybe simplifyColinear . triples $ ps
+
 simplify :: Poly -> Poly
-simplify poly = poly
+simplify (Poly ps) = if startLength == endLength then
+                       Poly ps
+                     else
+                       simplify (Poly oneStage)
+  where startLength = length ps
+        (Poly oneStage) = simplifyStage (Poly ps)
+        endLength = length oneStage
 
 shunt :: Vec -> Poly -> Poly -> Poly
-shunt direction f m = polyFromLocal direction $ reifyPoly cr
+shunt (Vec 0 0) _ m = m
+shunt direction f m = simplify $ polyFromLocal direction $ reifyPoly cr
   where f' = polyToLocal direction f
         m' = polyToLocal direction m
         ss = scanlevels f' m'
