@@ -1,5 +1,7 @@
 module GlossHelpers where
 
+import Data.Monoid
+
 import GHC.Float
 import Graphics.Gloss
 
@@ -14,6 +16,7 @@ dotPicture v = translate x y $ color red $ circle 3
   where (x, y) = toGloss v
 
 polyPicture :: Color -> Poly -> Picture
+polyPicture _ (Poly []) = mempty
 polyPicture c (Poly p) = pictures [color c $ polygon glossPoints,
                                    color black $ line outline]
   where glossPoints = map toGloss p
