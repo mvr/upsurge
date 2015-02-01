@@ -19,8 +19,11 @@ executable shunt
   main-is:             Main.hs
   -- other-modules:       
   other-extensions:    TemplateHaskell
-  build-depends:       base >=4.7 && <4.8, template-haskell >=2.9 && <2.10,
-                       lens, gloss
+  build-depends:       base >=4.7 && <4.8
+                     , containers >= 0.5.5.1
+                     , gloss
+                     , lens
+                     , template-haskell >=2.9 && <2.10
 
   -- hs-source-dirs:      
   default-language:    Haskell2010
