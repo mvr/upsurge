@@ -6,7 +6,7 @@ import Control.Lens
 import Control.Monad
 import Data.Maybe
 
-data Vec = Vec { _x :: Double, _y :: Double} deriving (Show, Eq)
+data Vec = Vec { _x :: Double, _y :: Double} deriving (Show, Eq, Read)
 makeLenses ''Vec
 
 instance Num Vec where

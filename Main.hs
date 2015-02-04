@@ -9,6 +9,7 @@ import GlossHelpers
 
 import Vec
 import Poly
+import Shunt
 
 shape :: Poly
 shape = Poly [Vec 0 0, Vec 50 0, Vec 100 100, Vec 0 100]
@@ -36,7 +37,7 @@ oldmain = display (InWindow "Shunt" (600, 600) (300, 300)) white (polysPicture [
 main :: IO ()
 main = play (InWindow "Shunt" (600, 600) (300, 300)) white 25 (Vec 1000 1000, shape) draw event (\_ w -> w)
   where draw (p, m) = let dots = mconcat $ fmap dotPicture (points m) in
-                       polysPicture [trans p square, m] <> dots
+                       polysPicture [trans p square, m] <> mempty -- dots
         event (EventMotion p) (old, m) = (p', shunt (p' - old) (trans p' square) m)
           where p' = fromGloss p
         event _ w = w
